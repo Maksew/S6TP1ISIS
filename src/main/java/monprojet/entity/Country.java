@@ -1,26 +1,27 @@
 package monprojet.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.*;
-
-import lombok.*;
-
-// Un exemple d'entité
-// On utilise Lombok pour auto-générer getter / setter / toString...
-// cf. https://examples.javacodegeeks.com/spring-boot-with-lombok/
 @Getter @Setter @NoArgsConstructor @RequiredArgsConstructor @ToString
-@Entity // Une entité JPA
+@Entity
 public class Country {
-    // Identifiant technique
-    @Id  @GeneratedValue(strategy = GenerationType.IDENTITY) 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    // Identifiant métier (code ISO)
-    @Column(unique=true)
+
     @NonNull
+    @Column(unique = true)
     private String code;
-    
-    @Column(unique=true)
+
     @NonNull
+    @Column(unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude  //Empêche Lombok d'inclure l'attribut cities dans la méthode toString() générée
+    private List<City> cities = new ArrayList<>();
 }
